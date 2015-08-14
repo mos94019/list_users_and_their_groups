@@ -11,7 +11,7 @@ class User:
         self.usergroups = []
         self.username = ''
 
-users = []
+user_dict =  {}
 with open('/etc/passwd') as passwd:
     for line in passwd:
         if '#' in line:
@@ -20,7 +20,7 @@ with open('/etc/passwd') as passwd:
         username = fields[0]
         userid = fields[2]
         user = User()
-        users.append(user)
+        user_dict[username] = user
         user.userid = userid
         user.username = username
 
@@ -35,11 +35,9 @@ with open('/etc/group') as group:
         if members_list:
             members = members_list.split(',')
             for member in members:
-                for user in users:
-                    if member == user.username:
-                        user.usergroups.append(group_name)
+                user_dict[member].usergroups.append(group_name)
 
-for user in users:
-    pprint.pprint(user.username + " " +  str(user.userid) + " " + str(user.usergroups))
+for user in user_dict.keys():
+    pprint.pprint(user_dict[user].username + " " +  str(user_dict[user].userid) + " " + str(user_dict[user].usergroups))
 
 
